@@ -3,7 +3,7 @@
 
 class Controller:public GameObject
 {
-    XMFLOAT3 Camposition_ = { 0,5,-10 };
+    XMFLOAT3 Camposition_ = { 7,7,0 };
 
 
     const float speed = 0.125;
