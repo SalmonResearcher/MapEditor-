@@ -62,14 +62,17 @@ void Stage::Draw()
 	{
 		for (int z = 0; z < 15; z++)
 		{
-			int type = table_[x][z];
-			int type = x % 2;
+			for (int y = 0; y < BlockSet::height; y++)
+			{
+				int type = table_[x][z];
+				type = 4;
 
-			Block.position_.x = x;
-			Block.position_.z = z;
+				Block.position_.x = x;
+				Block.position_.z = z;
 
-			Model::SetTransform(hModel_[(x+z)%5], Block);
-			Model::Draw(hModel_[(x+z)%5]);
+				Model::SetTransform(hModel_[type], Block);
+				Model::Draw(hModel_[type]);
+			}
 		}
 	}
 }

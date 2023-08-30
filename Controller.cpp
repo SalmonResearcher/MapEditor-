@@ -41,9 +41,9 @@ void Controller::Update()
 	{
 		//内積を取ってない
 		transform_.rotate_.x += 1;
-		if (transform_.rotate_.x >= 89)
+		if (transform_.rotate_.x >= 69)
 		{
-			transform_.rotate_.x = 89;
+			transform_.rotate_.x = 69;
 		}
 
 	}
@@ -52,9 +52,9 @@ void Controller::Update()
 	{
 		//内積をとってない
 		transform_.rotate_.x -= 1;
-		if (transform_.rotate_.x <= 1)
+		if (transform_.rotate_.x <= -20)
 		{
-			transform_.rotate_.x = 1;
+			transform_.rotate_.x = -20;
 		}
 
 
@@ -115,7 +115,7 @@ void Controller::Update()
 	XMStoreFloat3(&transform_.position_, nowVec);
 
 	//カメラ本体
-	XMVECTOR vCam = { 0,0,-1,0 };
+	XMVECTOR vCam = { 0,5,-15,0 };
 
 	//カメラ注視点
 	Camera::SetTarget(transform_.position_);

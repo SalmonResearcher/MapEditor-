@@ -14,8 +14,16 @@ class Stage : public GameObject
 {
     int hModel_[5];    //モデル番号
     int table_[XSIZE][ZSIZE];
+
+    struct BlockSet {
+        int BLOCKTYPE;
+        int height;
+        int table_[XSIZE][ZSIZE];
+    };
+
 public:
     void SetBrock(int _x, int _z, BLOCKTYPE _type);
+    void SetBrockHeight(int _x, int _z, int height);
     //コンストラクタ
     Stage(GameObject* parent);
 
