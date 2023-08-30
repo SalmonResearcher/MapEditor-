@@ -6,6 +6,7 @@
 #include "Engine/Input.h"
 #include "Engine/RootJob.h"
 #include "Engine/Model.h"
+#include "DirectXCollision.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -24,6 +25,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 //エントリーポイント
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
+	XMVECTOR beginP = XMVectorSet(1, 5, 1, 0);
+	XMVECTOR dirVec = XMVectorSet(0, -1, 0, 0);
+	XMVECTOR P1 = XMVectorSet(0, 0, 0, 0);
+	XMVECTOR P2 = XMVectorSet(0, 0, 3, 0);
+	XMVECTOR P3 = XMVectorSet(3, 0, 0, 0);
+	float dist;
+	bool result = TriangleTests::Intersects(beginP, dirVec, P1, P2, P3, dist);
+
+	int a;
+
 	//ウィンドウクラス（設計図）を作成
 	WNDCLASSEX wc;
 	wc.cbSize = sizeof(WNDCLASSEX);             //この構造体のサイズ
