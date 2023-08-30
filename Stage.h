@@ -6,24 +6,23 @@ const int XSIZE{ 15 };
 const int ZSIZE{ 15 };
 
 enum BLOCKTYPE {
-    DEFAULT,BRICK,GRASS,SAND,WATER
+    DEFAULT,BRICK,GRASS,SAND,WATER,MAX
 };
 
 //◆◆◆を管理するクラス
 class Stage : public GameObject
 {
-    int hModel_[5];    //モデル番号
-    int table_[XSIZE][ZSIZE];
+    int hModel_[MAX];    //モデル番号
 
-    struct BlockSet {
-        int BLOCKTYPE;
+    struct Blockinfo {
+        BLOCKTYPE type_;
         int height;
-        int table_[XSIZE][ZSIZE];
     };
+    Blockinfo table_[XSIZE][ZSIZE];
 
 public:
-    void SetBrock(int _x, int _z, BLOCKTYPE _type);
-    void SetBrockHeight(int _x, int _z, int height);
+    void SetBlock(int _x, int _z, BLOCKTYPE _type);
+    void SetBlockHeight(int _x, int _z, int _height);
     //コンストラクタ
     Stage(GameObject* parent);
 
