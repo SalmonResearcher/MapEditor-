@@ -13,6 +13,13 @@
 
 using std::vector;
 
+struct RayCastData
+{
+	XMFLOAT4 start;
+	XMFLOAT4 dir;
+	bool hit;
+};
+
 class Texture;
 
 class Fbx
@@ -39,6 +46,10 @@ class Fbx
 		XMVECTOR normal; //法線ベクトル
 	};
 
+
+	VERTEX* pVertices_;
+	int** ppIndex_;
+
 	int vertexCount_;	//頂点数
 	int polygonCount_;	//ポリゴン数
 	int materialCount_;	//マテリアルの個数
@@ -59,4 +70,6 @@ public:
 	HRESULT Load(std::string fileName);
 	void    Draw(Transform& transform);
 	void    Release();
+
+	void RayCast(RayCastData& _rayData);
 };

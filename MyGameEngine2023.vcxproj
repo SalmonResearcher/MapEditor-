@@ -175,7 +175,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Childoden.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Direct3D.h" />
