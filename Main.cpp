@@ -32,7 +32,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	XMVECTOR P3 = XMVectorSet(3, 0, 0, 0);
 	float dist;
 	bool result = TriangleTests::Intersects(beginP, dirVec, P1, P2, P3, dist);
-
+	
 	int a;
 
 	//ウィンドウクラス（設計図）を作成

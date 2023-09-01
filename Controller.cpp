@@ -18,23 +18,20 @@ void Controller::Initialize()
 {
 	transform_.rotate_.x = -10;
 	transform_.position_.z = -5;
-	
 }
 
 //更新
 void Controller::Update()
 {
-
 	//ここから回転させます
-	if (Input::IsKey(DIK_Q))
+	if (Input::IsKey(DIK_LEFT))
 	{
 		transform_.rotate_.y += 1;
 	}
 
-	if (Input::IsKey(DIK_E))
+	if (Input::IsKey(DIK_RIGHT))
 	{
 		transform_.rotate_.y -= 1;
-
 	}
 
 	if (Input::IsKey(DIK_UP))
@@ -45,7 +42,6 @@ void Controller::Update()
 		{
 			transform_.rotate_.x = 69;
 		}
-
 	}
 
 	if (Input::IsKey(DIK_DOWN))
@@ -56,9 +52,8 @@ void Controller::Update()
 		{
 			transform_.rotate_.x = -20;
 		}
-
-
 	}
+
 	//回転行列
 	XMMATRIX rotMatY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
 
@@ -70,23 +65,21 @@ void Controller::Update()
 	XMVECTOR frontMove = XMVectorSet( 0,0,speed, 0 );
 	frontMove = XMVector3TransformCoord(frontMove, rotMatY);
 
-	XMVECTOR RLMove = XMVectorSet(speed, 0, 0, 0);
-	RLMove = XMVector3TransformCoord(RLMove, rotMatY);
-
+	//上下左右回転
 	XMVECTOR udMove = XMVectorSet(0, speed, 0, 0);
 	udMove = XMVector3TransformCoord(udMove, rotMatY);
+	XMVECTOR RLMove = XMVectorSet(speed, 0, 0, 0);
+	RLMove = XMVector3TransformCoord(RLMove, rotMatY);
 
 	//右に移動
 	if (Input::IsKey(DIK_A)) 
 	{
 		nowVec -= RLMove;
-
 	}
 
 	//左に移動
 	if (Input::IsKey(DIK_D))
 	{
-	
 		nowVec += RLMove;
 	}
 
@@ -112,6 +105,8 @@ void Controller::Update()
 	{
 		nowVec += udMove;
 	}
+
+	//カメラ移動
 	XMStoreFloat3(&transform_.position_, nowVec);
 
 	//カメラ本体
@@ -121,7 +116,7 @@ void Controller::Update()
 	Camera::SetTarget(transform_.position_);
 	vCam = XMVector3TransformCoord(vCam, rotMatX * rotMatY);
 	
-
+	//カメラ座標変更
 	XMStoreFloat3(&Camposition_, nowVec + vCam);
 	Camera::SetPosition(Camposition_);
 
@@ -130,7 +125,6 @@ void Controller::Update()
 //描画
 void Controller::Draw()
 {
-
 }
 
 //開放
