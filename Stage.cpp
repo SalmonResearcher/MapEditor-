@@ -1,4 +1,6 @@
 #include "Stage.h"
+#include "Engine/Camera.h"
+#include "Engine/Input.h"
 #include "Engine/Model.h"
 
 //コンストラクタ
@@ -54,6 +56,18 @@ void Stage::Initialize()
 //更新
 void Stage::Update()
 {
+	XMMATRIX invView = XMMatrixInverse(nullptr, Camera::GetViewMatrix());
+	XMFLOAT3 mousePosFront = Input::GetMousePosition();
+	mousePosFront.z = 0.0f;
+	XMFLOAT3 mousePosBack = Input::GetMousePosition();
+
+	XMVECTOR vMouseBack = XMLoadFloat3(&mousePosback);
+
+	RayCastData data;
+	XMStoreFloat4(&data.start, vMouseFloat);
+
+
+
 }
 
 //描画
