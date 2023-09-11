@@ -61,13 +61,34 @@ void Stage::Update()
 	mousePosFront.z = 0.0f;
 	XMFLOAT3 mousePosBack = Input::GetMousePosition();
 
-	XMVECTOR vMouseBack = XMLoadFloat3(&mousePosback);
+	XMVECTOR vMouseBack = XMLoadFloat3(&mousePosBack);
+	XMVECTOR vMouseFront = XMLoadFloat3(&mousePosFront);
 
-	RayCastData data;
-	XMStoreFloat4(&data.start, vMouseFloat);
+	for (int x = 0; x < 15; x++)
+	{
+		for (int z = 0; z < 15; z++)
+		{
+			for (int y = 0; y < table_[x][y].height + 1; y++)
+			{
+				RayCastData data;
+				XMStoreFloat4(&data.start, vMouseFront);
+				XMStoreFloat4(&data.dir, vMouseBack - vMouseFront);
+				Transform trans;
+				trans.position_.x = x;
+				trans.position_.y = y;
+				trans.position_.z = z;
+				Model::SetTransform(hModel_[0], trans);
+				Model::RayCast(hModel_[0], data);
 
+				if (data.hit)
+				{
+					table_[x][z].height++;
+					break;
+				}
+			}
+		}
 
-
+	}
 }
 
 //•`‰æ

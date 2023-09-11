@@ -79,7 +79,9 @@ void Model::RayCast(int hModel, RayCastData& raydata)
 					raydata.start.w + raydata.dir.w };
 	//③rayData.statをモデル空間に変換（①を掛ける）
 	XMVECTOR vstart = XMLoadFloat4(&raydata.start);
-	vstart = XMVector3TransformCoord(vstart, wInv);
+	vstart = XMVector3TransformCoord(vstart, wInv); //tarnsformcoordはw要素を無視してくれるらしい
+	XMStoreFloat4(&raydata.start, vstart); //これ　値をセットすんの忘れてた。。。
+
 	//④（始点から方向ベクトルをちょい伸ばした先）通過点（②）に①を掛ける
 	vpass = 
 	//⑤rayData.dirを③から④に向かうベクトルにする（引き算）
