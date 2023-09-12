@@ -1,4 +1,5 @@
 #include "Stage.h"
+#include "resource.h"
 #include "Engine/Camera.h"
 #include "Engine/Input.h"
 #include "Engine/Model.h"
@@ -122,14 +123,17 @@ void Stage::Update()
 				Model::RayCast(hModel_[0], data);
 
 				//⑥　レイが当たったらブレイクポイントで止める
-				if (data.hit)
+				if (data.hit && mode_ == 0)
 				{
 					table_[x][z].height++;
 					break;
 				}
-
+				else if (data.hit && mode_ == 1)
+				{
+					table_[x][z].height--;
+					break;
+				}
 			}
-
 		}
 	}
 }
@@ -159,4 +163,34 @@ void Stage::Draw()
 //開放
 void Stage::Release()
 {
+}
+
+BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp) 
+{
+	switch (msg)
+	{
+		//ダイアログできた
+	case WM_INITDIALOG:
+		//ラジオボタンの初期値
+		SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BM_SETCHECK, BST_CHECKED, 0);
+
+		//コンボボックスの初期値
+		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"デフォルト");
+		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"レンガ");
+		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"草原");
+		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"砂地");
+		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"水");
+		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_SETCURSEL, 0, 0);
+
+		//やりたいこと”ラジオボタンにチェックを入れたらモードを0，1にする”
+		// ０の時は盛り上げる、１の時は盛り下げる
+		// ...ができたらよかった。
+		//SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BST_CHECKED, 0, 0);
+		SendMessage(GetDlgItem(hDlg, IDC_RADIO_DOWN), BST_CHECKED, 0, 0);
+
+		return TRUE;
+
+	}
+	return FALSE;
+
 }

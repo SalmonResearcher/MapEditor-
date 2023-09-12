@@ -9,7 +9,7 @@ enum BLOCKTYPE {
     DEFAULT,BRICK,GRASS,SAND,WATER,MAX
 };
 
-//◆◆◆を管理するクラス
+//Stageを管理するクラス
 class Stage : public GameObject
 {
     int hModel_[MAX];    //モデル番号
