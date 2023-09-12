@@ -17,8 +17,10 @@ class Stage : public GameObject
     struct Blockinfo {
         BLOCKTYPE type_;
         int height;
-    };
-    Blockinfo table_[XSIZE][ZSIZE];
+    } table_[XSIZE][ZSIZE];
+
+    int mode_;      //è„Ç∞â∫Ç∞
+    int select_;    //éÌóﬁ
 
 public:
     void SetBlock(int _x, int _z, BLOCKTYPE _type);
@@ -40,4 +42,6 @@ public:
 
     //äJï˙
     void Release() override;
+    BOOL DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp);
+
 };
