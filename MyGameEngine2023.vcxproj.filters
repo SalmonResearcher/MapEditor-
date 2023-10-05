@@ -134,8 +134,19 @@
     <ClInclude Include="Engine\SceneManager.h">
       <Filter>ソース ファイル\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>リソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="resource1.hm" />
+    <None Include="packages.config">
+      <Filter>リソース ファイル</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MapEditor1.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

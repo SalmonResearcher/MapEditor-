@@ -1,5 +1,5 @@
 #include "Stage.h"
-#include "resource.h"
+#include "resource1.h"
 #include "Engine/Camera.h"
 #include "Engine/Input.h"
 #include "Engine/Model.h"
@@ -174,7 +174,7 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 		//ラジオボタンの初期値
 		SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BM_SETCHECK, BST_CHECKED, 0);
 
-		//コンボボックスの初期値
+		//コンボボックスの初期値(できてない)
 		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"デフォルト");
 		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"レンガ");
 		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"草原");
@@ -187,6 +187,8 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 		// ...ができたらよかった。
 		//SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BST_CHECKED, 0, 0);
 		SendMessage(GetDlgItem(hDlg, IDC_RADIO_DOWN), BST_CHECKED, 0, 0);
+
+		///SendMessage(GetDlgItem(hDlg, IDC_MENU_SAVE),MN_SET)
 
 		return TRUE;
 
