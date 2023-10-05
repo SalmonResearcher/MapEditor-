@@ -192,6 +192,8 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 
 		return TRUE;
 
+		switch(WM_COMMAND):
+
 	}
 	return FALSE;
 
