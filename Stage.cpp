@@ -186,15 +186,21 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 		// ‚O‚Ì‚Í·‚èã‚°‚éA‚P‚Ì‚Í·‚è‰º‚°‚é
 		// ...‚ª‚Å‚«‚½‚ç‚æ‚©‚Á‚½B
 		//SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BST_CHECKED, 0, 0);
-		SendMessage(GetDlgItem(hDlg, IDC_RADIO_DOWN), BST_CHECKED, 0, 0);
+		//SendMessage(GetDlgItem(hDlg, IDC_RADIO_DOWN), BST_CHECKED, 0, 0);
 
 		///SendMessage(GetDlgItem(hDlg, IDC_MENU_SAVE),MN_SET)
 
 		return TRUE;
-
-		switch(WM_COMMAND):
-
 	}
 	return FALSE;
 
+	switch (WM_COMMAND)
+	{
+	case ID_MENU_SAVE:
+
+
+	default:
+		break;
+	}
 }
+

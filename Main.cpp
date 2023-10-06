@@ -194,6 +194,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		PostQuitMessage(0);  //ÉvÉçÉOÉâÉÄèIóπ
 		return 0;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case ID_MENU_NEW:
+				OutputDebugString("new File");
+				break;
+
+			case ID_MENU_OPEN:
+				OutputDebugString("open File");
+				break;
+
+			case ID_MENU_SAVE:
+				OutputDebugString("Save File");
+				break;
+		default:
+			break;
+		}
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
