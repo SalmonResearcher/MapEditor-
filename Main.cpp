@@ -194,33 +194,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		PostQuitMessage(0);  //プログラム終了
 		return 0;
+
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
-		case ID_MENU_NEW:
-				OutputDebugString("new File");
+			case ID_MENU_NEW:
+			{
 				break;
+			}
 
 			case ID_MENU_OPEN:
-				OutputDebugString("open File");
+			{
+				Stage* pStage = (Stage*)pRootJob->FindObject("Stage");
+				if(pStage != nullptr)
+				pStage->Load();
+
 				break;
+			}
 
 			case ID_MENU_SAVE:
-				OutputDebugString("Save File");
-				HANDLE hFile;        //ファイルのハンドル
-				hFile = CreateFile(
-					"NEW Name",                 //ファイル名
-					GENERIC_WRITE,           //アクセスモード（書き込み用）
-					0,                      //共有（なし）
-					NULL,                   //セキュリティ属性（継承しない）
-					CREATE_ALWAYS,           //作成方法
-					FILE_ATTRIBUTE_NORMAL,  //属性とフラグ（設定なし）
-					NULL);                  //拡張属性（なし）
+			{
+				Stage* pStage = (Stage*)pRootJob->FindObject("Stage");
+				if (pStage != nullptr)
+				pStage->Save();
+
 				break;
-		default:
-			break;
+			}
+
 		}
 	}
+
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 

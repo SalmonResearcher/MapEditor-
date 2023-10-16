@@ -3,6 +3,8 @@
 #include "Engine/Camera.h"
 #include "Engine/Input.h"
 #include "Engine/Model.h"
+#include <iostream>
+#include <string>
 
 //ブロック設置
 void Stage::SetBlock(int _x, int _z, BLOCKTYPE _type)
@@ -104,6 +106,9 @@ void Stage::Update()
 	//④　③にinvVP、invPrj、invViewを掛ける
 	vMouseBack = XMVector3TransformCoord(vMouseBack, invVP * invProj * invView);
 
+	int bufX = -1, bufZ;
+	float minDistance = 9999;
+
 	for (int x = 0; x < 15; x++)
 	{
 		for (int z = 0; z < 15; z++)
@@ -123,17 +128,33 @@ void Stage::Update()
 				Model::RayCast(hModel_[0], data);
 
 				//⑥　レイが当たったらブレイクポイントで止める
-				if (data.hit && mode_ == 0)
+				if (data.hit)
 				{
-					table_[x][z].height++;
-					break;
+					if (minDistance > data.dist)
+					{
+						minDistance = data.dist;
+						bufX = x;
+						bufZ = z;
+					}
 				}
-				else if (data.hit && mode_ == 1)
-				{
-					table_[x][z].height--;
-					break;
-				}
+
 			}
+		}
+	}
+	if (bufX >= 0)
+	{
+		switch (mode_)
+		{
+		case 0:
+			table_[bufX][bufZ].height++;
+			break;
+		case 1:
+			if (table_[bufX][bufZ].height > 0)
+				table_[bufX][bufZ].height--;
+			break;
+		case 2:
+			//table_[bufX][bufZ].type_ =  select_;
+			break;
 		}
 	}
 }
@@ -190,17 +211,248 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 
 		///SendMessage(GetDlgItem(hDlg, IDC_MENU_SAVE),MN_SET)
 
+	case WM_COMMAND:
+		switch (LOWORD(wp))
+		{
+		case IDC_RADIO_UP:
+			mode_ = 0;
+			return TRUE;
+
+		case IDC_RADIO_DOWN:
+			mode_ = 1;
+			return TRUE;
+
+		case IDC_RADIO_CHANGE:
+			mode_ = 2;
+			return TRUE;
+
+		case IDC_COMBO1:
+			select_ = (int)SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_GETCURSEL, 0, 0);
+			return TRUE;
+		}
+
+
+
+
 		return TRUE;
 	}
 	return FALSE;
-
-	switch (WM_COMMAND)
-	{
-	case ID_MENU_SAVE:
-
-
-	default:
-		break;
-	}
 }
 
+//void Save()
+//{
+//	char fileName[MAX_PATH] = "Save.map";
+//
+//	//ファイルを保存ダイアログの設定
+//	OPENFILENAME name;
+//	ZeroMemory(&name, sizeof(name));
+//	name.lStructSize = sizeof(OPENFILENAME);					//構造体のサイズ
+//	name.lpstrFilter = TEXT("マップデータ(*.map)\0*.map\0")		//ファイルの種類
+//		TEXT("すべてのファイル(*.*)\0*.*\0\0");
+//
+//	name.lpstrFile = fileName;									//ファイル名
+//	name.nMaxFile = MAX_PATH;									//パスの最大文字数
+//	name.Flags = OFN_OVERWRITEPROMPT;							//フラグ（同名ファイルが存在したら上書き確認）
+//	name.lpstrDefExt = "map";									//デフォルト拡張子
+//
+//	//「ファイルを保存」ダイアログ
+//	BOOL selFile;
+//	selFile = GetSaveFileName(&name);
+//
+//	//キャンセルしたら中断
+//	if (selFile == FALSE) return;
+//
+//	//ファイルを作成
+//	HANDLE hFile;				//ファイルのハンドル
+//	hFile = CreateFile(
+//		fileName,				//ファイル名
+//		GENERIC_WRITE,			//アクセスモード（書き込み用）
+//		0,						//共有（なし）
+//		NULL,					//セキュリティ属性（継承しない）
+//		CREATE_ALWAYS,           //作成方法
+//		FILE_ATTRIBUTE_NORMAL,  //属性とフラグ（設定なし）
+//		NULL);                  //拡張属性（なし）
+//
+//	char s[] = "こんにちは";
+//
+//	DWORD dwBytes = 0;  //書き込み位置
+//	WriteFile(
+//		hFile,              //ファイルハンドル
+//		s,                  //保存するデータ（文字列）
+//		(DWORD)strlen(s),   //書き込む文字数
+//		&dwBytes,           //書き込んだサイズを入れる変数
+//		NULL);              //オーバーラップド構造体（今回は使わない）
+//
+//	CloseHandle(hFile);
+//};
+//
+//void Stage::Load()
+//{
+//	char fileName[MAX_PATH] = "Save.map";
+//
+//	//「ファイルを保存」ダイアログの設定
+//	OPENFILENAME name;											//名前をつけて保存ダイアログの設定用構造体
+//	ZeroMemory(&name, sizeof(name));							//構造体初期化
+//	name.lStructSize = sizeof(OPENFILENAME);					//構造体のサイズ
+//	name.lpstrFilter = TEXT("マップデータ(*.map)\0*.map\0")		//ファイルの種類
+//		TEXT("すべてのファイル(*.*)\0*.*\0\0");
+//	name.lpstrFile = fileName;									//ファイル名
+//	name.nMaxFile = MAX_PATH;									//パスの最大文字数
+//	name.Flags = OFN_FILEMUSTEXIST;								//フラグ（同名ファイルが存在したら上書き確認）
+//	name.lpstrDefExt = "map";									//デフォルト拡張子
+//
+//	//「ファイルを保存」ダイアログ
+//	BOOL selFile;
+//	selFile = GetOpenFileName(&name);
+//
+//	//キャンセルしたら中断
+//	if (selFile == FALSE) return;
+//
+//	HANDLE hFile;				//ファイルのハンドル
+//	hFile = CreateFile(
+//		fileName,				//ファイル名
+//		GENERIC_READ,			//アクセスモード（書き込み用）
+//		0,						//共有（なし）
+//		NULL,					//セキュリティ属性（継承しない）
+//		OPEN_EXISTING,			//作成方法
+//		FILE_ATTRIBUTE_NORMAL,	//属性とフラグ（設定なし）
+//		NULL);					//拡張属性（なし）
+//
+//
+//	//ファイルのサイズを取得
+//	DWORD fileSize = GetFileSize(hFile, NULL);
+//
+//	//ファイルのサイズ分メモリを確保
+//	char* data;
+//	data = new char[fileSize];
+//
+//	DWORD dwBytes = 0; //読み込み位置
+//
+//	ReadFile(
+//		hFile,		//ファイルハンドル
+//		data,		//データを入れる変数
+//		fileSize,	//読み込むサイズ
+//		&dwBytes,	//読み込んだサイズ
+//		NULL);		//オーバーラップド構造体（今回は使わない）
+//
+//	CloseHandle(hFile);
+//};
+void Stage::Save()
+{
+	char fileName[MAX_PATH] = "無題.map";  //ファイル名を入れる変数
+
+	//「ファイルを保存」ダイアログの設定
+	OPENFILENAME ofn;                         	            //名前をつけて保存ダイアログの設定用構造体
+	ZeroMemory(&ofn, sizeof(ofn));            	            //構造体初期化
+	ofn.lStructSize = sizeof(OPENFILENAME);             	//構造体のサイズ
+	ofn.lpstrFilter = TEXT("マップデータ(*.map)\0*.map\0")  //ファイルの種類
+		TEXT("すべてのファイル(*.*)\0*.*\0\0");
+	ofn.lpstrFile = fileName;               	            //ファイル名
+	ofn.nMaxFile = MAX_PATH;               	                //パスの最大文字数
+	ofn.Flags = OFN_OVERWRITEPROMPT;   		                //フラグ（同名ファイルが存在したら上書き確認）
+	ofn.lpstrDefExt = "map";                  	            //デフォルト拡張子
+
+	//「ファイルを保存」ダイアログ
+	BOOL selFile;
+	selFile = GetSaveFileName(&ofn);
+
+	//キャンセルしたら中断
+	if (selFile == FALSE) return;
+
+
+
+	HANDLE hFile;        //ファイルのハンドル
+	hFile = CreateFile(
+		fileName,               //ファイル名
+		GENERIC_WRITE,          //アクセスモード（書き込み用）
+		0,                      //共有（なし）
+		NULL,                   //セキュリティ属性（継承しない）
+		CREATE_ALWAYS,          //作成方法
+		FILE_ATTRIBUTE_NORMAL,  //属性とフラグ（設定なし）
+		NULL);                  //拡張属性（なし）
+	string mapData;
+	for (int x = 0; x < 15; x++)
+	{
+		for (int z = 0; z < 15; z++)
+		{
+				string map = std::to_string(table_[x][z].height);
+				mapData += map;
+		}
+	}
+
+	const char* cstr = mapData.c_str();
+
+
+	DWORD dwBytes = 0;  //書き込み位置
+	WriteFile(
+		hFile,              //ファイルハンドル
+		cstr,                  //保存するデータ（文字列）
+		(DWORD)strlen(cstr),   //書き込む文字数
+		&dwBytes,           //書き込んだサイズを入れる変数
+		NULL);              //オーバーラップド構造体（今回は使わない）
+
+	CloseHandle(hFile);
+}
+
+void Stage::Load()
+{
+	char fileName[MAX_PATH] = "無題.map";  //ファイル名を入れる変数
+
+	//「ファイルを保存」ダイアログの設定
+	OPENFILENAME ofn;                         	            //名前をつけて保存ダイアログの設定用構造体
+	ZeroMemory(&ofn, sizeof(ofn));            	            //構造体初期化
+	ofn.lStructSize = sizeof(OPENFILENAME);             	//構造体のサイズ
+	ofn.lpstrFilter = TEXT("マップデータ(*.map)\0*.map\0")  //ファイルの種類
+		TEXT("すべてのファイル(*.*)\0*.*\0\0");             
+	ofn.lpstrFile = fileName;               	            //ファイル名
+	ofn.nMaxFile = MAX_PATH;               	                //パスの最大文字数
+	ofn.Flags = OFN_FILEMUSTEXIST;   		                //フラグ（同名ファイルが存在したら上書き確認）
+	ofn.lpstrDefExt = "map";                  	            //デフォルト拡張子
+
+	//「ファイルを保存」ダイアログ
+	BOOL selFile;
+	selFile = GetOpenFileName(&ofn);
+
+	//キャンセルしたら中断
+	if (selFile == FALSE) return;
+
+	HANDLE hFile;        //ファイルのハンドル
+	hFile = CreateFile(
+		fileName,                 //ファイル名
+		GENERIC_READ,           //アクセスモード（書き込み用）
+		0,                      //共有（なし）
+		NULL,                   //セキュリティ属性（継承しない）
+		OPEN_EXISTING,           //作成方法
+		FILE_ATTRIBUTE_NORMAL,  //属性とフラグ（設定なし）
+		NULL);                  //拡張属性（なし）
+
+
+	//ファイルのサイズを取得
+	DWORD fileSize = GetFileSize(hFile, NULL);
+
+	//ファイルのサイズ分メモリを確保
+	char* data;
+	data = new char[fileSize];
+
+	DWORD dwBytes = 0; //読み込み位置
+
+	ReadFile(
+		hFile,     //ファイルハンドル
+		data,      //データを入れる変数
+		fileSize,  //読み込むサイズ
+		&dwBytes,  //読み込んだサイズ
+		NULL);     //オーバーラップド構造体（今回は使わない）
+
+	int count = 0;
+	for (int x = 0; x < 15; x++)
+	{
+		for (int z = 0; z < 15; z++)
+		{
+			int height_ = (data[count] - '0');
+			table_[x][z].height = height_;
+			count++;
+		}
+	}
+
+	CloseHandle(hFile);
+}
