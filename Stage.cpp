@@ -313,21 +313,20 @@ void Stage::Save()
 		CREATE_ALWAYS,          //作成方法
 		FILE_ATTRIBUTE_NORMAL,  //属性とフラグ（設定なし）
 		NULL);                  //拡張属性（なし）
+
 	string mapData;
 	for (int x = 0; x < 15; x++)
 	{
 		for (int z = 0; z < 15; z++)
 		{
-				string map = std::to_string(table_[x][z].height);
+			table_[x][z].height;
 				mapData += map;
-				string typ = std::to_string(table_[x][z].type);
-				mapData += typ;
 		}
 	}
 
 	const char* cstr = mapData.c_str();
 
-
+	
 	DWORD dwBytes = 0;  //書き込み位置
 	WriteFile(
 		hFile,              //ファイルハンドル
