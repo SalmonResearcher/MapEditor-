@@ -9,7 +9,7 @@
 //ブロック設置
 void Stage::SetBlock(int _x, int _z, BLOCKTYPE _type)
 {
-	table_[_x][_z].type_ = _type;
+	table_[_x][_z].type = _type;
 }
 
 //ブロックの高さ
@@ -45,9 +45,9 @@ void Stage::Initialize()
 	string modelName[] = {
 		"BoxDefault.fbx",
 		"BoxBrick.fbx",
-		"BoxGrass.fbx",
 		"BoxSand.fbx",
-		"BoxWater.fbx"
+		"BoxWater.fbx",
+		"BoxGrass.fbx"
 	};
 	string filename_base = "assets/";
 
@@ -70,7 +70,7 @@ void Stage::Initialize()
 //更新
 void Stage::Update()
 {
-	if (!Input::IsMouseButtonDown(0)) {
+	if (!Input::IsMouseButton(0)) {
 		return;
 	}
 	float w = (float)(Direct3D::scrWidth / 2.0f);
@@ -135,6 +135,8 @@ void Stage::Update()
 						minDistance = data.dist;
 						bufX = x;
 						bufZ = z;
+						nowBrockX = x;
+						nowBrockZ = z;
 					}
 				}
 
@@ -146,14 +148,52 @@ void Stage::Update()
 		switch (mode_)
 		{
 		case 0:
-			table_[bufX][bufZ].height++;
+			if ((nowBrockX == curBrockX) && (nowBrockZ == curBrockZ)) {
+				if (Input::IsMouseButtonDown(0))
+				{
+					table_[bufX][bufZ].height++;
+				}
+				break;
+			}
+
+			else {
+				curBrockX = nowBrockX;
+				curBrockZ = nowBrockZ;
+				table_[bufX][bufZ].height++; 
+			}
 			break;
+
 		case 1:
-			if (table_[bufX][bufZ].height > 0)
-				table_[bufX][bufZ].height--;
+			if ((nowBrockX == curBrockX) && (nowBrockZ == curBrockZ)) {
+				if (Input::IsMouseButtonDown(0) && (table_[bufX][bufZ].height > 1))
+				{
+					table_[bufX][bufZ].height--;
+				}
+				break;
+			}
+
+			else {
+				curBrockX = nowBrockX;
+				curBrockZ = nowBrockZ;
+				if (table_[bufX][bufZ].height > 1)
+					table_[bufX][bufZ].height--;
+			}
 			break;
+
 		case 2:
-			//table_[bufX][bufZ].type_ =  select_;
+			if ((nowBrockX == curBrockX) && (nowBrockZ == curBrockZ)) {
+				if (Input::IsMouseButtonDown(0))
+				{
+					table_[bufX][bufZ].type = select_;
+				}
+				break;
+			}
+
+			else {
+				curBrockX = nowBrockX;
+				curBrockZ = nowBrockZ;
+				table_[bufX][bufZ].type = select_;
+			}
 			break;
 		}
 	}
@@ -169,7 +209,7 @@ void Stage::Draw()
 			for (int y = 0; y < table_[x][z].height + 0; y++)
 			{
 				//table[x][z]からオブジェクトのタイプを取り出して書く！
-				int type = table_[x][z].type_;
+				int type = table_[x][z].type;
 				Transform trans;
 				trans.position_.x = x;
 				trans.position_.y = y;
@@ -228,7 +268,8 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 
 		case IDC_COMBO1:
 			select_ = (int)SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_GETCURSEL, 0, 0);
-			return TRUE;
+			return	TRUE;
+
 		}
 
 
@@ -239,104 +280,6 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 	return FALSE;
 }
 
-//void Save()
-//{
-//	char fileName[MAX_PATH] = "Save.map";
-//
-//	//ファイルを保存ダイアログの設定
-//	OPENFILENAME name;
-//	ZeroMemory(&name, sizeof(name));
-//	name.lStructSize = sizeof(OPENFILENAME);					//構造体のサイズ
-//	name.lpstrFilter = TEXT("マップデータ(*.map)\0*.map\0")		//ファイルの種類
-//		TEXT("すべてのファイル(*.*)\0*.*\0\0");
-//
-//	name.lpstrFile = fileName;									//ファイル名
-//	name.nMaxFile = MAX_PATH;									//パスの最大文字数
-//	name.Flags = OFN_OVERWRITEPROMPT;							//フラグ（同名ファイルが存在したら上書き確認）
-//	name.lpstrDefExt = "map";									//デフォルト拡張子
-//
-//	//「ファイルを保存」ダイアログ
-//	BOOL selFile;
-//	selFile = GetSaveFileName(&name);
-//
-//	//キャンセルしたら中断
-//	if (selFile == FALSE) return;
-//
-//	//ファイルを作成
-//	HANDLE hFile;				//ファイルのハンドル
-//	hFile = CreateFile(
-//		fileName,				//ファイル名
-//		GENERIC_WRITE,			//アクセスモード（書き込み用）
-//		0,						//共有（なし）
-//		NULL,					//セキュリティ属性（継承しない）
-//		CREATE_ALWAYS,           //作成方法
-//		FILE_ATTRIBUTE_NORMAL,  //属性とフラグ（設定なし）
-//		NULL);                  //拡張属性（なし）
-//
-//	char s[] = "こんにちは";
-//
-//	DWORD dwBytes = 0;  //書き込み位置
-//	WriteFile(
-//		hFile,              //ファイルハンドル
-//		s,                  //保存するデータ（文字列）
-//		(DWORD)strlen(s),   //書き込む文字数
-//		&dwBytes,           //書き込んだサイズを入れる変数
-//		NULL);              //オーバーラップド構造体（今回は使わない）
-//
-//	CloseHandle(hFile);
-//};
-//
-//void Stage::Load()
-//{
-//	char fileName[MAX_PATH] = "Save.map";
-//
-//	//「ファイルを保存」ダイアログの設定
-//	OPENFILENAME name;											//名前をつけて保存ダイアログの設定用構造体
-//	ZeroMemory(&name, sizeof(name));							//構造体初期化
-//	name.lStructSize = sizeof(OPENFILENAME);					//構造体のサイズ
-//	name.lpstrFilter = TEXT("マップデータ(*.map)\0*.map\0")		//ファイルの種類
-//		TEXT("すべてのファイル(*.*)\0*.*\0\0");
-//	name.lpstrFile = fileName;									//ファイル名
-//	name.nMaxFile = MAX_PATH;									//パスの最大文字数
-//	name.Flags = OFN_FILEMUSTEXIST;								//フラグ（同名ファイルが存在したら上書き確認）
-//	name.lpstrDefExt = "map";									//デフォルト拡張子
-//
-//	//「ファイルを保存」ダイアログ
-//	BOOL selFile;
-//	selFile = GetOpenFileName(&name);
-//
-//	//キャンセルしたら中断
-//	if (selFile == FALSE) return;
-//
-//	HANDLE hFile;				//ファイルのハンドル
-//	hFile = CreateFile(
-//		fileName,				//ファイル名
-//		GENERIC_READ,			//アクセスモード（書き込み用）
-//		0,						//共有（なし）
-//		NULL,					//セキュリティ属性（継承しない）
-//		OPEN_EXISTING,			//作成方法
-//		FILE_ATTRIBUTE_NORMAL,	//属性とフラグ（設定なし）
-//		NULL);					//拡張属性（なし）
-//
-//
-//	//ファイルのサイズを取得
-//	DWORD fileSize = GetFileSize(hFile, NULL);
-//
-//	//ファイルのサイズ分メモリを確保
-//	char* data;
-//	data = new char[fileSize];
-//
-//	DWORD dwBytes = 0; //読み込み位置
-//
-//	ReadFile(
-//		hFile,		//ファイルハンドル
-//		data,		//データを入れる変数
-//		fileSize,	//読み込むサイズ
-//		&dwBytes,	//読み込んだサイズ
-//		NULL);		//オーバーラップド構造体（今回は使わない）
-//
-//	CloseHandle(hFile);
-//};
 void Stage::Save()
 {
 	char fileName[MAX_PATH] = "無題.map";  //ファイル名を入れる変数

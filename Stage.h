@@ -1,26 +1,32 @@
 #pragma once
 #include "Engine/GameObject.h"
-
-const int MODEL_NUM{ 5 };
-const int XSIZE{ 15 };
-const int ZSIZE{ 15 };
-
-enum BLOCKTYPE {
-    DEFAULT,BRICK,GRASS,SAND,WATER,MAX
-};
+namespace {
+    const int MODEL_NUM{ 5 };
+    const int XSIZE{ 15 };
+    const int ZSIZE{ 15 };
+    enum BLOCKTYPE
+    {
+        DEFAULT, BRICL, GRASS, SAND, WATER
+    };
+}
 
 //Stageを管理するクラス
 class Stage : public GameObject
 {
-    int hModel_[MAX];    //モデル番号
+    int hModel_[MODEL_NUM];    //モデル番号
 
     struct Blockinfo {
-        BLOCKTYPE type_;
+        int type;
         int height;
     } table_[XSIZE][ZSIZE];
 
-    int mode_;      //上げ下げ
+    int mode_;      //上げ下げ,種類の変更
     int select_;    //種類
+
+    int curBrockX = -1;
+    int curBrockZ = -1;
+    int nowBrockX = -1;
+    int nowBrockZ = -1;
 
 public:
     void SetBlock(int _x, int _z, BLOCKTYPE _type);
