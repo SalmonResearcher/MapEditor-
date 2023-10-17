@@ -320,6 +320,8 @@ void Stage::Save()
 		{
 				string map = std::to_string(table_[x][z].height);
 				mapData += map;
+				string typ = std::to_string(table_[x][z].type);
+				mapData += typ;
 		}
 	}
 
