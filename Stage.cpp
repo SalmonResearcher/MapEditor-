@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 
+
 //ブロック設置
 void Stage::SetBlock(int _x, int _z, BLOCKTYPE _type)
 {
@@ -318,13 +319,14 @@ void Stage::Save()
 	{
 		for (int z = 0; z < 15; z++)
 		{
-				string map = std::to_string(table_[x][z].height);
-				mapData += map;
-				string typ = std::to_string(table_[x][z].type);
-				mapData += typ;
+			string mapHeight = std::to_string(table_[x][z].height);
+			string mapType = std::to_string(table_[x][z].type); // ブロックの種類を数値に変換
+			mapData += mapHeight + "," + mapType; // 高さと種類をカンマ区切りで追加
+			if (x != 14 || z != 14) {  // マップの最後でない場合、カンマを追加
+				mapData += ",";
+			}
 		}
 	}
-
 	const char* cstr = mapData.c_str();
 
 
@@ -388,16 +390,26 @@ void Stage::Load()
 		&dwBytes,  //読み込んだサイズ
 		NULL);     //オーバーラップド構造体（今回は使わない）
 
-	int count = 0;
-	for (int x = 0; x < 15; x++)
-	{
-		for (int z = 0; z < 15; z++)
-		{
-			int height_ = (data[count] - '0');
-			table_[x][z].height = height_;
-			count++;
-		}
-	}
+	char* nextToken;
+	char* token = strtok_s(data, ",", &nextToken); // カンマで文字列を分割
 
-	CloseHandle(hFile);
+	int count = 0;
+	while (token != NULL)
+	{
+		if (count >= 15 * 15) {
+			break;  // データが多すぎる場合は終了
+		}
+
+		int height_ = atoi(token);
+		token = strtok_s(NULL, ",", &nextToken);
+
+		if (token != NULL) {
+			int type_ = atoi(token); // ブロックの種類の数値を読み込む
+			table_[count / 15][count % 15].height = height_;
+			table_[count / 15][count % 15].type = static_cast<BLOCKTYPE>(type_); // 数値からブロックの種類に変換
+		}
+
+		token = strtok_s(NULL, ",", &nextToken); // 次のトークンを取得
+		count++;
+	}	CloseHandle(hFile);
 }
