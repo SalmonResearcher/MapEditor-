@@ -160,7 +160,7 @@ void Stage::Update()
 			else {
 				curBrockX = nowBrockX;
 				curBrockZ = nowBrockZ;
-				table_[bufX][bufZ].height++; 
+				table_[bufX][bufZ].height++;
 			}
 			break;
 
@@ -196,8 +196,21 @@ void Stage::Update()
 				table_[bufX][bufZ].type = select_;
 			}
 			break;
+
+		case 3:
+			if(Input::IsMouseButtonDown(0))
+			for (int x = 0; x < 15; x++)
+			{
+				for (int z = 0; z < 15; z++)
+				{
+					if ((table_[bufX][bufZ].type == table_[x][z].type) && (table_[bufX][bufZ].height == table_[x][z].height))
+						table_[x][z].type = select_;
+				}
+			}break;
 		}
+		
 	}
+
 }
 
 //•`‰æ
@@ -271,6 +284,9 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 			select_ = (int)SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_GETCURSEL, 0, 0);
 			return	TRUE;
 
+		case IDC_RADIO_COLOR:
+			mode_ = 3;
+			return TRUE;
 		}
 
 

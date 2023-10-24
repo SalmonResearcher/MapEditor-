@@ -22,6 +22,7 @@ class Stage : public GameObject
 
     int mode_;      //ã‚°‰º‚°,í—Ş‚Ì•ÏX
     int select_;    //í—Ş
+    bool bold_;     //‘å–mi
 
     int curBrockX = -1;
     int curBrockZ = -1;
