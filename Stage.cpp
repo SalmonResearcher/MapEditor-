@@ -198,14 +198,16 @@ void Stage::Update()
 			break;
 
 		case 3:
-			if(Input::IsMouseButtonDown(0))
-			for (int x = 0; x < 15; x++)
-			{
-				for (int z = 0; z < 15; z++)
+				int savetype = table_[bufX][bufZ].type;
+				for (int x = 0; x < 15; x++)
 				{
-					if ((table_[bufX][bufZ].type == table_[x][z].type) && (table_[bufX][bufZ].height == table_[x][z].height))
-						table_[x][z].type = select_;
-				}
+					for (int z = 0; z < 15; z++)
+					{
+						if ((savetype == table_[x][z].type) && (table_[bufX][bufZ].height == table_[x][z].height))
+							table_[x][z].type = select_;
+					}
+
+			
 			}break;
 		}
 		
