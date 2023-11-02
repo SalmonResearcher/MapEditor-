@@ -24,17 +24,17 @@ void Controller::Initialize()
 void Controller::Update()
 {
 	//‚±‚±‚©‚ç‰ñ“]‚³‚¹‚Ü‚·
-	if (Input::IsKey(DIK_LEFT))
+	if (Input::IsKey(DIK_Q))
 	{
 		transform_.rotate_.y += 1;
 	}
 
-	if (Input::IsKey(DIK_RIGHT))
+	if (Input::IsKey(DIK_E))
 	{
 		transform_.rotate_.y -= 1;
 	}
 
-	if (Input::IsKey(DIK_UP))
+	if (Input::IsKey(DIK_F))
 	{
 		//“àÏ‚ğæ‚Á‚Ä‚È‚¢
 		transform_.rotate_.x += 1;
@@ -44,7 +44,7 @@ void Controller::Update()
 		}
 	}
 
-	if (Input::IsKey(DIK_DOWN))
+	if (Input::IsKey(DIK_C))
 	{
 		//“àÏ‚ğ‚Æ‚Á‚Ä‚È‚¢
 		transform_.rotate_.x -= 1;

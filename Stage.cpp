@@ -259,13 +259,7 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)"水");
 		SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_SETCURSEL, 0, 0);
 
-		//やりたいこと”ラジオボタンにチェックを入れたらモードを0，1にする”
-		// ０の時は盛り上げる、１の時は盛り下げる
-		// ...ができたらよかった。
-		//SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BST_CHECKED, 0, 0);
-		//SendMessage(GetDlgItem(hDlg, IDC_RADIO_DOWN), BST_CHECKED, 0, 0);
-
-		///SendMessage(GetDlgItem(hDlg, IDC_MENU_SAVE),MN_SET)
+		//エディットコントロールを使ってみる
 
 	case WM_COMMAND:
 		switch (LOWORD(wp))
